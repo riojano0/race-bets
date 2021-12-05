@@ -59,3 +59,7 @@ func (pilot *Pilot) GetChallengerNumber() int {
 func (pilot *Pilot) GetInformation() string {
 	return "Pilot Name: " + pilot.Name + " Pilot Number: " + strconv.Itoa(pilot.PilotNumber) + " Car Name: " + pilot.Car.Name
 }
+
+func ResetPilotNumbers() {
+	initialPilotNumber = 0
+}

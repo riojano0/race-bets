@@ -67,4 +67,6 @@ func startGame() {
 	} else {
 		fmt.Printf("\n******You lost! The pilot in first position was: %v******", winner)
 	}
+
+	pilot.ResetPilotNumbers()
 }

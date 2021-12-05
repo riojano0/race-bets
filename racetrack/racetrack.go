@@ -35,15 +35,15 @@ func CreateRaceTrack(challengers []challenger.Challenger) *RaceTrack {
 	}
 }
 
-func (racetrack *RaceTrack) StartRace() {
+func (racetrack *RaceTrack) StartRace(winnerChannel chan int) {
 
 	wg := &sync.WaitGroup{}
 	challengerChannel := make(chan challenger.Challenger)
 
-	fmt.Println("Starting Race on track with length:", racetrack.Track.Length)
+	fmt.Println("- Starting Race on track with length:", racetrack.Track.Length)
 	wg.Add(2)
 	go challengersRun(racetrack, wg, challengerChannel)
-	go AnnounceWinners(racetrack, wg, challengerChannel)
+	go AnnounceWinners(racetrack, wg, challengerChannel, winnerChannel)
 
 	wg.Wait()
 }
@@ -64,14 +64,21 @@ func challengersRun(racetrack *RaceTrack, wg *sync.WaitGroup, challengerChannel 
 	wg.Done()
 }
 
-func AnnounceWinners(racetrack *RaceTrack, wg *sync.WaitGroup, challengerChannel <-chan challenger.Challenger) {
+func AnnounceWinners(racetrack *RaceTrack, wg *sync.WaitGroup, challengerChannel <-chan challenger.Challenger, winnerChannel chan<- int) {
 
+	winnerPilot := 0
 	positionSlotInuse := 0
 
 	for challenger := range challengerChannel {
+		if winnerPilot == 0 {
+			winnerPilot = challenger.GetChallengerNumber()
+		}
 		positionSlotInuse += 1
 		fmt.Println("Finish in position", positionSlotInuse, "\n\t", challenger.GetInformation())
 	}
 
 	wg.Done()
+
+	winnerChannel <- winnerPilot
+	close(winnerChannel)
 }

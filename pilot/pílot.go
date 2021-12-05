@@ -52,6 +52,10 @@ func (pilot *Pilot) Run(trackLength int, wg *sync.WaitGroup, challengerChannel c
 	wg.Done()
 }
 
+func (pilot *Pilot) GetChallengerNumber() int {
+	return pilot.PilotNumber
+}
+
 func (pilot *Pilot) GetInformation() string {
 	return "Pilot Name: " + pilot.Name + " Pilot Number: " + strconv.Itoa(pilot.PilotNumber) + " Car Name: " + pilot.Car.Name
 }
